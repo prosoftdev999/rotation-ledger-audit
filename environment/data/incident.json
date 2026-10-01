@@ -1,0 +1,14 @@
+{
+  "channels": [
+    "alpha",
+    "bravo",
+    "charlie",
+    "delta",
+    "echo",
+    "foxtrot"
+  ],
+  "incident_id": "signing-journal-2026-05",
+  "note": "Journals were merged from independent replicas and are not in causal order.",
+  "scope_end": "2026-05-02T00:00:00Z",
+  "scope_start": "2026-05-01T08:00:00Z"
+}

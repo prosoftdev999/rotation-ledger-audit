@@ -1,0 +1,30 @@
+artifacts = ["/app/audit.json"]
+
+[task]
+name = "afterquery/rotation-ledger-audit"
+
+[metadata]
+author_name = "Tomas Morison"
+author_email = "matiasv931026@gmail.com"
+difficulty_explanation = "This is a synthetic incident reconstruction modeled on release-signing and transparency systems. The hard part is recovering one coherent trust history from out-of-order cryptographic journals whose correctness depends on signatures, weighted witnesses, key timing, manifest commitments, chain continuity, and checkpoint gates across many records; a security engineer would normally inspect the code and evidence together rather than solve it as a single-table exercise."
+solution_explanation = "The reference implementation reads the deployed service helpers to reproduce canonical encodings, verifies the trust and witness events, reconstructs key availability over time, validates release commitments and signatures, and then walks each channel history through its checkpoint boundaries. It reports the resulting heads and every record excluded from that trusted history."
+verification_explanation = "The sealed verifier compares only /app/audit.json and never imports or executes agent code. Fresh calibration on the shipped journals gives 545 trusted and 181 rejected releases, with heads alpha=109, bravo=60, charlie=120, delta=100, echo=70, foxtrot=86. Each one-rule near-miss was rerun against this exact dataset and rejected: skipping release signatures yields 521 trusted (-24) and stops bravo at 36; counting rotation witnesses instead of summing weight yields 469 (-76) and stops charlie at 44; ignoring witness revocation yields 529 (-16) and stops delta at 84; sorting manifest leaves by name changes 59 release memberships and leaves 488 trusted; treating revocation as strictly-after instead of effective-at yields 595 (+50) and extends echo to 120; ignoring previous-chain hashes yields 497 (-48) and an extra charlie equivocation at 73; ignoring cross-release manifest reuse yields 546 (+1) and an extra foxtrot equivocation at 88; accepting checkpoint witness weight 5 instead of 6 yields 605 (+60) and extends bravo to 120; ignoring checkpoint chain commitments yields 565 (+20) and extends delta to 120; choosing a branch through the signed alpha equivocation yields 556 (+11) and extends alpha to 120. The shipped naive cheat was also run and rejected."
+category = "Security"
+subcategory = "Cryptography"
+tags = ["cryptography", "signatures", "forensics"]
+expert_time_estimate_hours = 10
+relevant_experience = "I have hands-on experience building Python and Docker validation bundles and reviewing security-oriented code paths, including Ed25519 signature checks, SHA-256 commitments, and adversarial negative tests."
+
+[verifier]
+timeout_sec = 300
+environment_mode = "separate"
+
+[agent]
+timeout_sec = 14400
+
+[environment]
+build_timeout_sec = 600
+cpus = 2
+memory_mb = 4096
+storage_mb = 4096
+gpus = 0
